@@ -6,12 +6,14 @@ import ContactsFilter from '../ContactsFilter/ContactsFilter';
 import { Box } from './App.styled';
 import { useSelector, useDispatch } from 'react-redux'
 import { getFilteredContacts } from 'redux/contacts/contacts-selectors';
-import { addContacts, deleteContacts } from 'redux/contacts/contacts-actions';
+// import { addContacts, deleteContacts } from 'redux/contacts/contacts-actions';
+import { addContact, removeContact } from 'redux/contacts/contacts-slice';
 import { getFilter } from 'redux/filter/filter-selectors';
-import { setFilter } from 'redux/filter/filter-actions';
+import { setFilter } from 'redux/filter/filter-slice';
 
 export default function App() {
   const contacts = useSelector(getFilteredContacts)
+  console.log(contacts)
   const filter = useSelector(getFilter)
   const dispatch = useDispatch()
   // const [contacts, setContacts] = useState(() => JSON.parse(localStorage.getItem('contacts')) ?? [])
@@ -21,12 +23,12 @@ export default function App() {
   //   localStorage.setItem('contacts', JSON.stringify(contacts))
   // }, [contacts])
 
-  const addContact = (contact) => {
+  const onAddContact = (contact) => {
     if (onDuplicatingName(contact)) {
       return Notify.failure(`This contact: (${contact.name}) is already in your contact book`);
     }
 
-    dispatch(addContacts(contact))
+    dispatch(addContact(contact))
     // setContacts((prev) => {
     //   const newContact = {
     //     id: nanoid(),
@@ -51,20 +53,21 @@ export default function App() {
     }
   };
 
-  const onGetFilteredContacts = () => {
-    if (!filter) {
-      return contacts
-    }
+  // const onGetFilteredContacts = () => {
+  //   if (!filter) {
+  //     return contacts
+  //   }
 
-    const filteredContacts = contacts.filter(({ name, number }) => {
-      const result = name.toLocaleLowerCase().includes(filter.toLocaleLowerCase()) || number.toLocaleLowerCase().includes(filter.toLocaleLowerCase())
-      return result
-    })
-    return filteredContacts
-  }
+  //   const filteredContacts = contacts.filter(({ name, number }) => {
+  //     const result = name.toLocaleLowerCase().includes(filter.toLocaleLowerCase()) || number.toLocaleLowerCase().includes(filter.toLocaleLowerCase())
+  //     return result
+  //   })
+  //   return filteredContacts
+  // }
 
   const deleteContact = (id) => {
-    dispatch(deleteContacts(id))
+    // console.log(id)
+    dispatch(removeContact(id))
     // setContacts((prevState) => {
     //   const newContacts = prevState.filter(contact => {
     //     return contact.id !== id
@@ -73,13 +76,13 @@ export default function App() {
     // })
   }
 
-  const filteredContacts = onGetFilteredContacts()
+  // const filteredContacts = onGetFilteredContacts()
 
   return (
     <Box>
-      <ContactsForm onSubmit={addContact} />
+      <ContactsForm onSubmit={onAddContact} />
       <ContactsFilter inputChange={handleChange} filterValue={filter} />
-      <ContactsList contacts={filteredContacts} onDelete={deleteContact} />
+      <ContactsList contacts={contacts} onDelete={deleteContact} />
     </Box >
   )
 }
