@@ -1,5 +1,5 @@
-export const getFilteredContacts = ({ filter, contacts }) => {   
-  // console.log(contacts.contacts)
+export const getFilteredContacts = ({ items }) => {   
+    const {filter, contacts} = items
     if (!filter) {
       return contacts
     }

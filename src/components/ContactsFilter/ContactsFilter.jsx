@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 
 export default function ContactsFilter({ inputChange, filterValue }) {
     const filterInpuId = nanoid();
-    console.log(filterValue)
     return (
         <Box>
             <Label htmlFor={filterInpuId}> Write a name for quick search</Label>
@@ -16,5 +15,5 @@ export default function ContactsFilter({ inputChange, filterValue }) {
 
 ContactsFilter.propTypes = {
     inputChange: PropTypes.func.isRequired,
-    filterValue: PropTypes.string.isRequired
+    filterValue: PropTypes.string
 }

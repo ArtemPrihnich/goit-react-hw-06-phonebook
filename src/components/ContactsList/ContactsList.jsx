@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 export default function ContactsList({ contacts, onDelete }) {
     return (
         <List>
-            {contacts.map(({ name, number, id }) => {
+            {contacts?.map(({ name, number, id }) => {
                 return (
                     <Item key={id}>{name}: {number} <Button onClick={() => onDelete(id)}>delete</Button></Item>
                 )
