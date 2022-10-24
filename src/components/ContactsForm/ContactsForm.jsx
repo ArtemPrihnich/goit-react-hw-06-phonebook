@@ -1,9 +1,15 @@
 import React, { useState } from 'react'
 import { nanoid } from 'nanoid'
 import { Button, Form, Input, Label } from './ContactsForm.styled';
-import PropTypes from 'prop-types'
+import { useSelector, useDispatch } from 'react-redux'
+import { getFilteredContacts } from 'redux/contacts/contacts-selectors';
+import { addContact } from 'redux/contacts/contacts-slice';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-export default function ContactsForm({ onSubmit }) {
+export default function ContactsForm() {
+    const contacts = useSelector(getFilteredContacts)
+    const dispatch = useDispatch()
+
     const [name, setName] = useState('')
     const [number, setNumber] = useState('')
 
@@ -22,9 +28,24 @@ export default function ContactsForm({ onSubmit }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit({ name, number })
+        onAddContact({ name, number })
+    }
+
+    const onAddContact = (contact) => {
+        if (onDuplicatingName(contact)) {
+            return Notify.failure(`This contact: (${contact.name}) is already in your contact book`);
+        }
+
+        dispatch(addContact(contact))
         setName('')
         setNumber('')
+    }
+
+    const onDuplicatingName = ({ name }) => {
+        const result = contacts.find(contact => {
+            return contact.name.toLocaleLowerCase() === name.toLocaleLowerCase()
+        })
+        return result
     }
 
     return (
@@ -58,6 +79,3 @@ export default function ContactsForm({ onSubmit }) {
     )
 }
 
-ContactsForm.propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-}
